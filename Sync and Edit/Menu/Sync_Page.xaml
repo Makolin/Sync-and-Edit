@@ -1,0 +1,44 @@
+﻿<Page
+    x:Class="Sync_and_Edit.Menu.Sync_Page"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Sync_and_Edit.Menu"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <ListBox Name="myListBox" SelectionMode="Single" Grid.Column="0" SelectionChanged="myListBox_SelectionChanged">
+            <ListBoxItem Name="oneStep">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource itemIcon}"/>
+                    <TextBlock  Text="Устройства"/>
+                </StackPanel>
+            </ListBoxItem>
+            <ListBoxItem Name="twoStep">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource itemIcon}"/>
+                    <TextBlock x:Name="twoStep_text" Text="Выбор файлов"/>
+                </StackPanel>
+            </ListBoxItem>
+            <ListBoxItem Name="threeStep">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource itemIcon}"/>
+                    <TextBlock x:Name="threeStep_text" Text="Синхронизация"/>
+                </StackPanel>
+            </ListBoxItem>
+        </ListBox>
+        <SplitView Grid.Column="1">
+            <SplitView.Content>
+                <Frame Name="myFrame">
+                    <TextBlock Style="{StaticResource zagalovoc}" VerticalAlignment="Top" Margin="0 30 0 0">Синхронизация</TextBlock>
+                </Frame>
+            </SplitView.Content>
+        </SplitView>
+    </Grid>
+</Page>

@@ -1,0 +1,29 @@
+﻿<Page
+    x:Class="Sync_and_Edit.Menu.Glav_Page"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Sync_and_Edit.Menu"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.6*" />
+            <RowDefinition Height="1.3*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" FontWeight="Bold"  Grid.ColumnSpan="3" Style="{StaticResource zagalovoc}">Sync and Edit</TextBlock>
+        <Button x:Name="Edit" Grid.Row="2" Grid.Column="0" Content="Редактирование" Style="{StaticResource buttonStyle}" Width="200" Height="40" Click="Edit_Click" />
+        <Button x:Name="Sync" Grid.Row="2" Grid.Column="2" Content="Синхронизация" Style="{StaticResource buttonStyle}" Width="200" Height="40" Click="Sync_Click"  />
+        <Image x:Name="Main_edit" Grid.Column="0"  Grid.Row="1" Source="ms-appx:///Resources/Main_edit.png"/>
+        <Image Grid.Column="1"  Grid.Row="1" Source="ms-appx:///Resources/Add.png"/>
+        <Image x:Name="Main_sync" Grid.Column="2"  Grid.Row="1" Source="ms-appx:///Resources/Main_sync.png"/>
+    </Grid>
+</Page>

@@ -1,0 +1,94 @@
+﻿<Page
+    x:Class="Sync_and_Edit.EditPage.Edit_Tags"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Sync_and_Edit.EditPage"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="90" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="70" />
+            <RowDefinition Height="100" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="300" />
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource zagalovoc}">Редактирование тегов</TextBlock>
+        <ListView x:Name="SongList" Grid.Row="1" Grid.RowSpan="2" Margin="40 0 0 0" SelectionChanged="SongList_SelectionChanged">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.HeaderTemplate >
+                <DataTemplate ScrollViewer.VerticalScrollMode="Disabled">
+                    <Grid Padding="12" Background="LightGray" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock HorizontalAlignment="Center" Grid.Column="0" Text="Название"/>
+                        <TextBlock HorizontalAlignment="Center" Grid.Column="1" Text="Дата изменения"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.HeaderTemplate>
+            <ListView.ItemTemplate >
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock HorizontalAlignment="Center" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Name_song}"/>
+                        <TextBlock HorizontalAlignment="Center" Grid.Column="1" VerticalAlignment="Center" Text="{Binding Date_change}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <TextBlock Grid.Column="0" Grid.Row="3" x:Name="Statictik" Padding="30"/>
+        <Grid Grid.Row="1" Grid.Column="1" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="200"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="0" Style="{StaticResource text}" >Номер</TextBlock>
+            <TextBlock FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="1" Style="{StaticResource text}" >Артист</TextBlock>
+            <TextBlock FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="2" Style="{StaticResource text}" >Название</TextBlock>
+            <TextBlock FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="3" Style="{StaticResource text}" >Альбом</TextBlock>
+            <TextBlock FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="4" Style="{StaticResource text}" >Артист<LineBreak/>альбома</TextBlock>
+            <TextBlock FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="5" Style="{StaticResource text}" >Год</TextBlock>
+            <!--<TextBlock FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="6" Style="{StaticResource text}" >Жанр</TextBlock>
+            <TextBlock FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="7" Style="{StaticResource text}" >Композитор</TextBlock>-->
+
+            <TextBox Grid.Row="0" Grid.Column="1" Height="10" x:Name="tb_Number"></TextBox>
+            <TextBox Grid.Row="1" Grid.Column="1" Height="10" x:Name="tb_Artist"></TextBox>
+            <TextBox Grid.Row="2" Grid.Column="1" Height="10" x:Name="tb_Name_song"></TextBox>
+            <TextBox Grid.Row="3" Grid.Column="1" Height="10" x:Name="tb_Albom"></TextBox>
+            <TextBox Grid.Row="4" Grid.Column="1" Height="10" x:Name="tb_Artist_Albom"></TextBox>
+            <TextBox Grid.Row="5" Grid.Column="1" Height="10" x:Name="tb_Year"></TextBox>
+            <!--<TextBox Grid.Row="6" Grid.Column="1" Height="10" x:Name="tb_Genge" IsEnabled="False"></TextBox>
+            <TextBox Grid.Row="7" Grid.Column="1" Height="10" x:Name="tb_Composer" IsEnabled="False"></TextBox>-->
+            <Button Grid.Row="7" Grid.Column="1" x:Name="Tags_edit" Content="Подтвердить" Style="{StaticResource buttonStyle}" 
+                    Width="190" Height="40" IsEnabled="False" Click="Tags_edit_Click" HorizontalAlignment="Center"/>
+        </Grid>
+
+        <Button Content="Далее" Grid.Row="3" Grid.Column="1" x:Name="Accept" Style="{StaticResource buttonAccept}" Click="Accept_Click"/>
+    </Grid>
+</Page>

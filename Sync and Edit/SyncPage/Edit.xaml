@@ -1,0 +1,103 @@
+﻿<Page
+    x:Class="Sync_and_Edit.SyncPage.Edit"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Sync_and_Edit.SyncPage"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="90" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="150" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="300" />
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource zagalovoc}" >Выбор файлов для синхронизации</TextBlock>
+
+        <ListView x:Name="SongList" Grid.Row="1" Margin="40 0 0 0">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.HeaderTemplate>
+                <DataTemplate>
+                    <Grid Padding="12" Background="LightGray">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="150"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock HorizontalAlignment="Center" Grid.Column="0"/>
+                        <TextBlock HorizontalAlignment="Center" Grid.Column="1" Text="Название"/>
+                        <TextBlock HorizontalAlignment="Left" Grid.Column="2" Text="Синхронизация" />
+                        <TextBlock HorizontalAlignment="Left" Grid.Column="3" Text="Конвертация"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.HeaderTemplate>
+            <ListView.ItemTemplate >
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="150"/>
+                        </Grid.ColumnDefinitions>
+                        <!--<Ellipse Width="8" Height="8" Grid.Column="0" >
+                            <Interactivity:Interaction.Behaviors>
+                                <Core:DataTriggerBehavior Binding="{Binding Visible}" Value="true">
+                                    <Core:ChangePropertyAction TargetObject="{Binding ElementName=MyEllipse}" PropertyName="Fill" Value="Green" />
+                                </Core:DataTriggerBehavior>
+                            </Interactivity:Interaction.Behaviors>
+                        </Ellipse>
+                        <CheckBox Grid.Column="0" IsChecked="{Binding Visible, Mode=TwoWay}" />-->
+                        <TextBlock HorizontalAlignment="Center" Grid.Column="1" VerticalAlignment="Center" Text="{Binding Name_song}"/>
+                        <CheckBox Grid.Column="2" x:Name="CheckBox_Sync" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                  IsChecked="{Binding Synchronization, Mode=TwoWay}" 
+                                  Margin="30 0 0 0" Checked="Sync_Checked" Unchecked="Sync_Unchecked"/>
+                        <CheckBox Grid.Column="3" x:Name="Formats" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                  IsChecked="{Binding FormatToFormat,Mode=TwoWay}"
+                                  Margin="30 0 0 0" Checked="Formats_Checked" Unchecked="Formats_Unchecked"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="200" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Center" Text="Выберите устройство"/>
+            <ComboBox x:Name="ComboBox" DisplayMemberPath="Name" SelectedValuePath="ComboBoxOption"
+                  Width="250" Grid.Row="0"  VerticalAlignment="Top" 
+                  HorizontalAlignment="Center" Margin="0 30 0 0"
+                  ItemsSource="{Binding Name}" SelectionChanged="ComboBox_SelectionChanged"/>
+
+            <TextBlock x:Name="Percent" Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+            <!--<controls:RadialProgressBar x:Name="RadialProgressBarControl"
+            Grid.Row="1"  Minimum="0" Maximum="100"
+            Thickness="10" Width="190" Margin="55,0,55,0" Height="190" VerticalAlignment="Bottom"/>-->
+            <TextBlock x:Name="InCircle" Grid.Row="1" VerticalAlignment="Bottom" Margin="115 0 0 65" FontSize="50"/>
+
+        </Grid>
+
+        <CheckBox Grid.Row="3" Grid.Column="0" x:Name="AllConvert" Content="Конвертировать все песни" 
+                  HorizontalAlignment="Left" Margin="100 70 0 0" Checked="AllConvert_Checked" 
+                  Unchecked="AllConvert_Unchecked"/>
+        <CheckBox Grid.Row="3" Grid.Column="0" x:Name="AllSync" Content="Синхронизировать все песни"  
+                  HorizontalAlignment="Left" Margin="100 -20 0 0" Checked="AllSync_Checked" 
+                  Unchecked="AllSync_Unchecked" />
+        <Button Grid.Row="2" Grid.Column="1" x:Name="Accept" Style="{StaticResource buttonAccept}" Click="Accept_Click" />
+    </Grid>
+</Page>

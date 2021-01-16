@@ -1,0 +1,63 @@
+﻿<Page
+    x:Class="Sync_and_Edit.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Sync_and_Edit"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Name="homeButton" Grid.Column="0" Style="{StaticResource buttonStyle}" Click="HomeButton_Click">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="&#xE80F;"  Style="{StaticResource textBlockIcon}"/>
+                    <TextBlock Text="Главная"/>
+                </StackPanel>
+            </Button>
+            <Button Grid.Column="1" Style="{StaticResource buttonStyle}" Click="EditButton_Click">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="&#xE15E;"  Style="{StaticResource textBlockIcon}"/>
+                    <TextBlock Text="Редактирование"/>
+                </StackPanel>
+            </Button>
+            <Button Grid.Column="2" Style="{StaticResource buttonStyle}" Click="SyncButton_Click">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="&#xE117;"  Style="{StaticResource textBlockIcon}"/>
+                    <TextBlock Text="Синхронизация"/>
+                </StackPanel>
+            </Button>
+            <Button Grid.Column="3" Style="{StaticResource buttonStyle}" Click="InfoButton_Click">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="&#xE897;"  Style="{StaticResource textBlockIcon}"/>
+                    <TextBlock Text="Справка"/>
+                </StackPanel>
+            </Button>
+            <Button Grid.Column="4" Name ="exitButton"  Style="{StaticResource buttonStyle}" Click="ExitButton_Click" BorderThickness="0 0 0 0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource textBlockIcon}" Text="&#xE10A;"/>
+                    <TextBlock Text="Выход"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+        <Grid Grid.Row="1">
+            <SplitView>
+                <SplitView.Content>
+                    <Frame Name="myContent"/>
+                </SplitView.Content>
+            </SplitView>
+        </Grid>
+    </Grid>
+</Page>

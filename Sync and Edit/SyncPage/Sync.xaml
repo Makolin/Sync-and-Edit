@@ -1,0 +1,61 @@
+﻿<Page
+    x:Class="Sync_and_Edit.SyncPage.Sync"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Sync_and_Edit.SyncPage"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="90" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="100" />
+            <RowDefinition Height="150" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="300" />
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  Style="{StaticResource zagalovoc}">Синхронизация</TextBlock>
+        <Grid Grid.Column="0" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="1.3*" />
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" x:Name="About_Sync" FontSize="23" Margin="20 0 0 0"/>
+            <TextBlock Grid.Row="1" x:Name="CopySong" FontSize="23"/>
+            <TextBlock Grid.Row="2" x:Name="DeleteComputer" FontSize="23"/>
+            <TextBlock Grid.Row="3" x:Name="DeleteDevice" FontSize="23"/>
+        </Grid>
+
+        <TextBlock Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" 
+                   FontSize="30" x:Name="Load" VerticalAlignment="Center">Внешнее мультимедийное устройство не подключено</TextBlock>
+
+        <Button Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" x:Name="Reload" Click="Reload_Click"
+                Content="Обновить страницу" Style="{StaticResource buttonForm}" Width="250" Margin="200 100 200 0"/>
+
+        <StackPanel Grid.Row="2" Grid.Column="0" x:Name="ProgressBar" Visibility="Collapsed">
+            <TextBlock HorizontalAlignment="Center" Margin="5">Статус синхронизации</TextBlock>
+            <ProgressBar x:Name="status" Value="0"  Margin="20 0 0 0"  Height="15"/>
+            <TextBlock x:Name="Count_sync" HorizontalAlignment="Center" Margin="5"/>
+        </StackPanel>
+
+        <Button Grid.Row="3" Grid.Column="1" x:Name="Accept_button" Style="{StaticResource buttonAccept}" 
+                Click="Accept_Click" Content="Начать" Visibility="Collapsed"/>
+
+        <StackPanel x:Name="Check" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Visibility="Collapsed">
+            <CheckBox x:Name="Delete_computer" IsChecked="True" Content="Удалить файлы на компьютере"
+                      Checked="Delete_computer_Checked" Unchecked="Delete_computer_Unchecked"/>
+            <CheckBox x:Name="Delete_device" IsChecked="True" Content="Удалить файлы на устройстве" Margin="0 20 0 0"
+                      Checked="Delete_device_Checked" Unchecked="Delete_device_Unchecked"/>
+        </StackPanel>
+
+
+    </Grid>
+</Page>

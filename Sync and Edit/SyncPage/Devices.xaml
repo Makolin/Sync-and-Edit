@@ -1,0 +1,68 @@
+﻿<Page
+    x:Class="Sync_and_Edit.SyncPage.Devices"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Sync_and_Edit.SyncPage"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Name="myContent" Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="90" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="100" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="250" />
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource zagalovoc}" >Устройства</TextBlock>
+        <ListView x:Name="DeviceList" Grid.Row="1" Margin="40 0 0 0" SelectionChanged="deviceList_SelectionChanged">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.HeaderTemplate>
+                <DataTemplate>
+                    <Grid Padding="12" Background="LightGray">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock HorizontalAlignment="Center" Grid.Column="2" Text="Название" />
+                        <TextBlock HorizontalAlignment="Center" Grid.Column="3" Text="Модель"/>
+                        <TextBlock HorizontalAlignment="Center" Grid.Column="4" Text="Память (GB)"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.HeaderTemplate>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Height="48">
+                        <Grid.ColumnDefinitions >
+                            <ColumnDefinition Width="15"/>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Ellipse Width="10" Height="10"  Fill="Green" x:Name="Active_device" Visibility="Collapsed" />
+                        <Image Source="ms-appx:///Resources/smart.jpg" Height="32" Width="32" Grid.Column="1" VerticalAlignment="Center"/>
+                        <TextBlock HorizontalAlignment="Center" Grid.Column="2" VerticalAlignment="Center" Style="{ThemeResource BaseTextBlockStyle}" Text="{Binding Name}" />
+                        <TextBlock HorizontalAlignment="Center" Grid.Column="3" VerticalAlignment="Center" Text="{Binding Model}"/>
+                        <TextBlock HorizontalAlignment="Center" Grid.Column="4" VerticalAlignment="Center" Text="{Binding Memory}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Button VerticalAlignment="Top" Grid.Row="1" Grid.Column="1" x:Name="new_device" Content="Новое" Style="{StaticResource buttonForm}"  Click="New_device_Click" Margin="0 100 0 0" />
+        <Button VerticalAlignment="Top" Grid.Row="1" Grid.Column="1" x:Name="edit_device" Content="Изменить" Style="{StaticResource buttonForm}" Width="130" Height="40" Click="Edit_device_Click" Margin="0 200 0 0" IsEnabled="False"/>
+        <Button VerticalAlignment="Top" Grid.Row="1" Grid.Column="1" x:Name="delete_device" Content="Удалить" Style="{StaticResource buttonForm}" Width="130" Height="40" Click="Delete_device_Click" Margin="0 300 0 0" IsEnabled="False" />
+        <Button Grid.Row="2" Grid.Column="1" x:Name="Accept" Style="{StaticResource buttonAccept}" Click="Accept_Click" Content="Далее"/>
+    </Grid>
+</Page>
