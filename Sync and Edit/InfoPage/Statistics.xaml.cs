@@ -38,14 +38,14 @@ namespace Sync_and_Edit.InfoPage
                     vstavka + "в базу внесено " + count_device + " устройств(а);";
 
                 var count_format = db.Query<Song>("Select * from Song");
-                var count_mp3 = count_format.Count(c => c.Format_Id == 1);
-                var count_flac = count_format.Count(c => c.Format_Id == 2);
-                var count_alac = count_format.Count(c => c.Format_Id == 3);
-                var count_ape = count_format.Count(c => c.Format_Id == 4);
-                var count_aac = count_format.Count(c => c.Format_Id == 5);
-                var count_ogg = count_format.Count(c => c.Format_Id == 6);
-                var count_wav = count_format.Count(c => c.Format_Id == 7);
-                var count_wma = count_format.Count(c => c.Format_Id == 8);
+                var count_mp3 = count_format.Count(c => c.FormatId == 1);
+                var count_flac = count_format.Count(c => c.FormatId == 2);
+                var count_alac = count_format.Count(c => c.FormatId == 3);
+                var count_ape = count_format.Count(c => c.FormatId == 4);
+                var count_aac = count_format.Count(c => c.FormatId == 5);
+                var count_ogg = count_format.Count(c => c.FormatId == 6);
+                var count_wav = count_format.Count(c => c.FormatId == 7);
+                var count_wma = count_format.Count(c => c.FormatId == 8);
                 var text = "";
 
                 if (count_mp3 != 0)

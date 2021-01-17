@@ -1,6 +1,8 @@
 ﻿using SQLite;
 using Sync_and_Edit.DataBase;
+using System;
 using System.Linq;
+using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 
 
@@ -17,7 +19,7 @@ namespace Sync_and_Edit.Menu
             myFrame.Navigate(typeof(SyncPage.Devices));
         }
 
-        private void myListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void myListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (oneStep.IsSelected)
             {
@@ -31,6 +33,8 @@ namespace Sync_and_Edit.Menu
                     if (exist.Count() == 0)
                     {
                         oneStep.IsSelected = true;
+                        var dialog = new MessageDialog("База данных устройств пуста!");
+                        await dialog.ShowAsync();
                     }
                     else
                     {
@@ -47,6 +51,8 @@ namespace Sync_and_Edit.Menu
                     if (exist.Count() == 0)
                     {
                         oneStep.IsSelected = true;
+                        var dialog = new MessageDialog("База данных устройств пуста!");
+                        await dialog.ShowAsync();
                     }
                     else
                     {

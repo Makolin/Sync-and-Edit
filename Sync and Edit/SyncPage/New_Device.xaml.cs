@@ -29,8 +29,8 @@ namespace Sync_and_Edit.SyncPage
         {
             using (SQLiteConnection db = new SQLiteConnection(App.DB_PATH))
             {
-                var deviceID = db.Query<Music_format>("select Id from Device").Last();
-                Db_Helper.Insert_Device_Format(new Device_format(deviceID.Id, formatId));
+                var deviceID = db.Query<MusicFormat>("select Id from Device").Last();
+                Db_Helper.Insert_Device_Format(new DeviceFormat(deviceID.Id, formatId));
             }
         }
 
@@ -156,7 +156,7 @@ namespace Sync_and_Edit.SyncPage
                 var counts_song = db.Query<Song>("Select * from Song");
                 foreach (Song song in counts_song)
                 {
-                    Db_Helper.Insert_Sync_Device(new Sync_Device(temp_id.Id, song.SongID));
+                    Db_Helper.Insert_Sync_Device(new SyncDevice(temp_id.Id, song.SongID));
                 }
             }
         }

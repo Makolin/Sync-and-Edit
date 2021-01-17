@@ -94,7 +94,7 @@ namespace Sync_and_Edit.SyncPage
         {
             using (SQLiteConnection db = new SQLiteConnection(App.DB_PATH))
             {
-                var exist = db.Find<Device_format>(c => c.DeviceID == EditDevice.Id && c.Music_formatID == formatId);
+                var exist = db.Find<DeviceFormat>(c => c.DeviceID == EditDevice.Id && c.MusicFormatID == formatId);
                 if (exist == null)
                 {
                     return false;
@@ -108,7 +108,7 @@ namespace Sync_and_Edit.SyncPage
 
         private void Enter_Device_music(int formatId)
         {
-            Db_Helper.Insert_Device_Format(new Device_format(EditDevice.Id, formatId));
+            Db_Helper.Insert_Device_Format(new DeviceFormat(EditDevice.Id, formatId));
         }
 
         private async void Save_file()

@@ -23,7 +23,7 @@ namespace Sync_and_Edit.EditPage
     {
         static bool check_copy = true;
         static int count_source;
-        static string text_audioteca, text_source;
+        static string textAudioteca, text_source;
         static int count_song; //Используется для подсчета перенесенных песен
         static int count_song_insert; //Используется для подсчета перенесенных песен
         static int count_song_up; //Используется для подсчета перенесенных песен
@@ -45,16 +45,27 @@ namespace Sync_and_Edit.EditPage
         }
         private async void Read_Json()
         {
-            Json = await Json.Read_Json();
-            Source_1.Text = Json.Json_source_1;
-            Source_2.Text = Json.Json_source_2;
-            Source_3.Text = Json.Json_source_3;
-            Audio.Text = Json.Json_audioteca;
-            text_audioteca = Json.Json_audioteca.Split('\\').Last();
+            Json = await Json.ReadJson();
+            if (Json.Json_source_1 != string.Empty)
+            {
+                Source_1.Text = Json.Json_source_1;
+            }
+            if (Json.Json_source_2 != string.Empty)
+            {
+                Source_2.Text = Json.Json_source_2;
+            }
+            if (Json.Json_source_3 != string.Empty)
+            {
+                Source_3.Text = Json.Json_source_3;
+            }
+            if (Json.Json_audioteca != string.Empty)
+            {
+                Audio.Text = Json.Json_audioteca;
+                textAudioteca = Json.Json_audioteca.Split('\\').Last();
+            }
         }
 
-
-        public static List<string> Find_Song(string path)
+        public static List<string> FindSongInDirectory(string path)
         {
             try
             {
@@ -68,10 +79,8 @@ namespace Sync_and_Edit.EditPage
                 .ToList();
                 return files;
             }
-            catch
-            {
+            catch { }
 
-            }
             return null;
         }
 
@@ -87,39 +96,39 @@ namespace Sync_and_Edit.EditPage
             }
         }
 
-        //Если найден файл с лучшим качеством записи
+        // Если найден файл с лучшим качеством записи
         private async Task Update_Audio(StorageFolder folder, string new_file, Song old_song, string path, string audio, int bitrait)
         {
             using (SQLiteConnection db = new SQLiteConnection(App.DB_PATH))
             {
-                var format = db.Find<Music_format>(c => c.Id == old_song.Format_Id);
-                var old_file = audio + "\\" + old_song.Name_song + "." + format.Name_format;
+                var format = db.Find<MusicFormat>(c => c.Id == old_song.FormatId);
+                var old_file = audio + "\\" + old_song.NameSong + "." + format.NameFormat;
                 await Task.Run(() =>
                 {
-                    File.Delete(old_file); //удаляем старый файл
-                    });
+                    File.Delete(old_file); 
+                });
 
                 string fileName = Path.GetFileName(new_file);
                 string destFile = Path.Combine(audio, fileName);
                 await Task.Run(() =>
                 {
-                    File.Copy(new_file, destFile, false); //Перемещаем новый файл
-                    });
+                    File.Copy(new_file, destFile, false);
+                });
 
-                string temp_format = Path.GetExtension(new_file).Replace(".", ""); //Формат файла
-                var insert_format = db.Find<Music_format>(c => c.Name_format == temp_format);
+                string temp_format = Path.GetExtension(new_file).Replace(".", "");
+                var insert_format = db.Find<MusicFormat>(c => c.NameFormat == temp_format);
 
                 string import_name = Path.GetFullPath(new_file).Replace(path, "").Substring(1);
                 StorageFile music_files = await folder.GetFileAsync(import_name);
                 MusicProperties musicProperties = await music_files.Properties.GetMusicPropertiesAsync();
 
-                StringBuilder fileProperties = new StringBuilder(); //размер файла в байтах
+                StringBuilder fileProperties = new StringBuilder();
                 BasicProperties basicProperties = await music_files.GetBasicPropertiesAsync();
                 int fileSize = Convert.ToInt32(basicProperties.Size);
 
                 await Task.Run(() =>
                 {
-                    old_song.Format_Id = insert_format.Id;
+                    old_song.FormatId = insert_format.Id;
                     old_song.Bitrait = bitrait;
                     old_song.Size = fileSize;
                     Db_Helper.Update_Song(old_song);
@@ -133,16 +142,16 @@ namespace Sync_and_Edit.EditPage
             DatabaseHelperClass Db_Helper = new DatabaseHelperClass();
             using (SQLiteConnection db = new SQLiteConnection(App.DB_PATH))
             {
-                var files = Find_Song(path);
+                var files = FindSongInDirectory(path);
                 if (files != null)
                 {
                     foreach (string file in files)
                     {
                         await Task.Run(() =>
                         {
+                            // Убираем атрибуты "только для чтения"
                             File.SetAttributes(file, System.IO.FileAttributes.Archive);
-                                //Убираем атрибуты "только для чтения"
-                            });
+                        });
 
                         string fileName = Path.GetFileName(file);
                         string destFile = Path.Combine(audio, fileName);
@@ -157,13 +166,14 @@ namespace Sync_and_Edit.EditPage
                             import_path = import_path.Replace(path + @"\", "") + @"\";
                             //Получаются пути пример Земфира\
                         }
-                        var exist = db.Find<Song>(c => c.Name_song == name_song);
-                        //Проверка на наличие данного названия муз. файла в базе
+                        // Проверка на наличие данного названия трека в базе данных
+                        var exist = db.Find<Song>(c => c.NameSong == name_song);
+                        
                         if (exist == null)
                         {
                             string temp_format = Path.GetExtension(file).Replace(".", ""); //Формат файла
                             text_source = path.Split('\\').Last(); //имя папка откуда файл
-                            var temp_format_id = db.Find<Music_format>(c => c.Name_format == temp_format);
+                            var temp_format_id = db.Find<MusicFormat>(c => c.NameFormat == temp_format);
                             if (temp_format_id != null) //Если данный аудиоформат есть в базе данных
                             {
                                 string import_name = Path.GetFullPath(file).Replace(path, "").Substring(1);
@@ -216,7 +226,7 @@ namespace Sync_and_Edit.EditPage
                                         var song = db.Query<Song>("select * from Song").Last();
                                         foreach (var device in Devices_exist)
                                         {
-                                            Db_Helper.Insert_Sync_Device(new Sync_Device(device.Id, song.SongID));
+                                            Db_Helper.Insert_Sync_Device(new SyncDevice(device.Id, song.SongID));
                                         }
                                     }
                                 }
@@ -234,11 +244,11 @@ namespace Sync_and_Edit.EditPage
 
                             StorageFile music_files = await folder.GetFileAsync(import_name);
                             MusicProperties musicProperties = await music_files.Properties.GetMusicPropertiesAsync();
-                            var current_song = db.Find<Song>(c => c.Name_song == name_song);
+                            var current_song = db.Find<Song>(c => c.NameSong == name_song);
                             if (musicProperties.Bitrate != current_song.Bitrait)
                             {
                                 await Best_file(folder, file, current_song, Convert.ToInt32(musicProperties.Bitrate),
-                                    path, audio, current_song.Name_song + " " + current_song.Bitrait / 1000 + " кбит/c",
+                                    path, audio, current_song.NameSong + " " + current_song.Bitrait / 1000 + " кбит/c",
                                     name_song + " " + musicProperties.Bitrate / 1000 + " кбит/c");
                             }
                         }
@@ -389,8 +399,8 @@ namespace Sync_and_Edit.EditPage
             {
                 progressRing.IsActive = true;
                 var temp_count = db.Query<Song>("Select * from Song");
-                var files = Find_Song(Audio.Text);
-                if (temp_count.Count() == 0 && files.Count != 0) //Если таблица муз. файлов пустая
+                var files = FindSongInDirectory(Audio.Text);
+                if (temp_count.Count() == 0 && files.Count != 0)
                 {
                     if (Source_1.Visibility == Visibility.Collapsed)
                     {
@@ -495,7 +505,7 @@ namespace Sync_and_Edit.EditPage
 
         private async Task ClearFolder(string path)
         {
-            var files = Find_Song(path);
+            var files = FindSongInDirectory(path);
             foreach (string file in files)
             {
                 await Task.Run(() =>
@@ -507,7 +517,7 @@ namespace Sync_and_Edit.EditPage
 
         private void If_Deleted()
         {
-            var files = Find_Song(Audio.Text);
+            var files = FindSongInDirectory(Audio.Text);
             List<string> name_songs = new List<String>();
             using (SQLiteConnection db = new SQLiteConnection(App.DB_PATH))
             {
@@ -522,10 +532,10 @@ namespace Sync_and_Edit.EditPage
                     var all_song = db.Query<Song>("Select * from Song");
                     foreach (var song in all_song)
                     {
-                        if (!name_songs.Contains(song.Name_song))
+                        if (!name_songs.Contains(song.NameSong))
                         {
                             count_delete_song++;
-                            var exist = db.Query<Sync_Device>("Select * from Sync_Device where SongID == " + song.SongID +
+                            var exist = db.Query<SyncDevice>("Select * from Sync_Device where SongID == " + song.SongID +
                                 " and Date_sync < '01.01.2018'");
                             if (exist.Count() != 0)
                             {

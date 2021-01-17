@@ -24,7 +24,7 @@ namespace Sync_and_Edit
             DatabaseHelperClass Db_Helper = new DatabaseHelperClass();
             foreach (string format in ListFormat)
             {
-                Db_Helper.Insert(new Music_format(format));
+                Db_Helper.Insert(new MusicFormat(format));
             }
         }
 

@@ -3,10 +3,10 @@ using System;
 
 namespace Sync_and_Edit.DataBase
 {
-    interface ISong
+    /*interface ISong
     {
         int SongID { get; }
-    }
+    }*/
     public class Device
     {
         [PrimaryKey, AutoIncrement, NotNull]
@@ -36,43 +36,43 @@ namespace Sync_and_Edit.DataBase
     {
         [PrimaryKey, AutoIncrement, NotNull]
         public int Id { get; set; }
-        public int Track_Number { get; set; }
+        public int TrackNumber { get; set; }
         public string Artist { get; set; }
-        public string Name_song { get; set; }
+        public string NameSong { get; set; }
         public string Albom { get; set; }
-        public string Artist_Albom { get; set; }
+        public string ArtistAlbom { get; set; }
         public int Year { get; set; }
         public string Genge { get; set; }
         //public string Comment { get; set; }
         public string Composer { get; set; }
 
         public Tag() { }
-        public Tag(int track_number, string artist, string name_song, string albom, string artist_albom,
+        public Tag(int trackNumber, string artist, string nameSong, string albom, string artistAlbom,
             int year, string genge, string composer)
         {
-            Track_Number = track_number;
+            TrackNumber = trackNumber;
             Artist = artist;
-            Name_song = name_song;
+            NameSong = nameSong;
             Albom = albom;
-            Artist_Albom = artist_albom;
+            ArtistAlbom = artistAlbom;
             Year = year;
             Genge = genge;
             //Comment = comment;
             Composer = composer;
         }
     }
-    public class Song : ISong
+    public class Song 
     {
         [PrimaryKey, AutoIncrement, NotNull]
         public int SongID { get; set; }
         [NotNull]
         public int TagId { get; set; }
         [NotNull]
-        public string Name_song { get; set; }
+        public string NameSong { get; set; }
         [NotNull]
-        public int Format_Id { get; set; }
+        public int FormatId { get; set; }
         [NotNull]
-        public DateTime Date_change { get; set; }
+        public DateTime DateChange { get; set; }
         [NotNull]
         public int Bitrait { get; set; }
         [NotNull]
@@ -81,53 +81,50 @@ namespace Sync_and_Edit.DataBase
         public bool Deleted { get; set; }
 
         public Song() { }
-        public Song(int tag_id, string name_song, int format_id,
-            DateTime date_change, int bitrait, int size, string path, bool deleted)
+        public Song(int tagId, string nameSong, int formatId,
+            DateTime dateChange, int bitrait, int size, string path, bool deleted)
         {
-            TagId = tag_id;
-            Name_song = name_song;
-            Format_Id = format_id;
-            Date_change = date_change;
+            TagId = tagId;
+            NameSong = nameSong;
+            FormatId = formatId;
+            DateChange = dateChange;
             Bitrait = bitrait;
             Size = size;
             Path = path;
-            deleted = Deleted;
+            Deleted = deleted;
         }
     }
 
-
-    public class Music_format
+    public class MusicFormat
     {
         [PrimaryKey, AutoIncrement, NotNull]
         public int Id { get; set; }
         [NotNull]
-        public string Name_format { get; set; }
-
-        public Music_format() { }
-        public Music_format(string name_format)
+        public string NameFormat { get; set; }
+        public MusicFormat() { }
+        public MusicFormat(string name_format)
         {
-            Name_format = name_format;
-
+            NameFormat = name_format;
         }
     }
 
-    public class Device_format
+    public class DeviceFormat
     {
         [PrimaryKey, AutoIncrement, NotNull]
         public int Id { get; set; }
         public int DeviceID { get; set; }
-        public int Music_formatID { get; set; }
+        public int MusicFormatID { get; set; }
 
-        public Device_format() { }
-        public Device_format(int device_id, int music_format_id)
+        public DeviceFormat() { }
+        public DeviceFormat(int deviceId, int musicFormatId)
         {
-            DeviceID = device_id;
-            Music_formatID = music_format_id;
+            DeviceID = deviceId;
+            MusicFormatID = musicFormatId;
 
         }
     }
 
-    public class Sync_Device : ISong
+    public class SyncDevice
     {
         [PrimaryKey, AutoIncrement, NotNull]
         public int Id { get; set; }
@@ -135,22 +132,21 @@ namespace Sync_and_Edit.DataBase
         public int SongID { get; set; }
         public bool Synchronization { get; set; }
         public bool FormatToFormat { get; set; }
-        public DateTime Date_sync { get; set; }
+        public DateTime DateSync { get; set; }
 
-
-        public Sync_Device() { }
-        public Sync_Device(int deviceId, int songId)
+        public SyncDevice() { }
+        public SyncDevice(int deviceId, int songId)
         {
             DeviceID = deviceId;
             SongID = songId;
         }
-        public Sync_Device(int deviceId, int songId, bool synchronization, bool formatToformat, DateTime date_sync)
+        public SyncDevice(int deviceId, int songId, bool synchronization, bool formatToFormat, DateTime dateSync)
         {
             DeviceID = deviceId;
             SongID = songId;
             Synchronization = synchronization;
-            FormatToFormat = formatToformat;
-            Date_sync = date_sync;
+            FormatToFormat = formatToFormat;
+            DateSync = dateSync;
         }
     }
     public class Combinated_Sync
@@ -159,21 +155,21 @@ namespace Sync_and_Edit.DataBase
         public int Id { get; set; }
         public int DeviceID { get; set; }
         public int SongID { get; set; }
-        public string Name_song { get; set; }
+        public string NameSong { get; set; }
         public bool Synchronization { get; set; }
         public bool FormatToFormat { get; set; }
-        public DateTime Date_change { get; set; }
+        public DateTime DateChange { get; set; }
         bool Visible { get; set; }
 
-        public Combinated_Sync(int deviceId, int songId, string name_song, bool synchronization, bool formatToformat,
-            DateTime date_change, bool visible)
+        public Combinated_Sync(int deviceId, int songId, string nameSong, bool synchronization, bool formatToFormat,
+            DateTime dateChange, bool visible)
         {
             DeviceID = deviceId;
             SongID = songId;
-            Name_song = name_song;
+            NameSong = nameSong;
             Synchronization = synchronization;
-            FormatToFormat = formatToformat;
-            Date_change = date_change;
+            FormatToFormat = formatToFormat;
+            DateChange = dateChange;
             Visible = visible;
         }
     }

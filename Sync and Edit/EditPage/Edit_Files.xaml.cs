@@ -29,9 +29,9 @@ namespace Sync_and_Edit.EditPage
         static string audioteca;
         static string text_audioteca;
         static Song current_song;
-        List<string> delete_folder = new List<string>(); //список папок для удаления
-        List<string> Song_without_Tag = new List<string>(); //список файлов без тегов
-        List<Song> Song_list_convert = new List<Song>(); //список песен для удаления
+        List<string> DeleteFolder = new List<string>(); 
+        List<string> SongWithoutTag = new List<string>(); 
+        List<Song> SongDeleteAfterConvert = new List<Song>();
         static int all_convert_song = 0, current_convert_song = 0;
         DatabaseHelperClass Db_Helper = new DatabaseHelperClass();
         StorageFolder Main_folder;
@@ -45,13 +45,13 @@ namespace Sync_and_Edit.EditPage
 
         private async void Read_Json()
         {
-            Json = await Json.Read_Json();
+            Json = await Json.ReadJson();
             audioteca = Json.Json_audioteca;
             text_audioteca = Json.Json_audioteca.Split('\\').Last();
         }
 
 
-        private async void name_Click(object sender, RoutedEventArgs e)
+        private async void Name_Click(object sender, RoutedEventArgs e)
         {
             using (SQLiteConnection db = new SQLiteConnection(App.DB_PATH))
             {
@@ -70,10 +70,10 @@ namespace Sync_and_Edit.EditPage
                         {
                             await Rename_function(db, Tags, i);
                         }
-                        if (Song_without_Tag.Count != 0)
+                        if (SongWithoutTag.Count != 0)
                         {
                             string temp = "";
-                            foreach (string file in Song_without_Tag)
+                            foreach (string file in SongWithoutTag)
                             {
                                 temp = temp + "\n - " + file;
                             }
@@ -81,7 +81,7 @@ namespace Sync_and_Edit.EditPage
                             var dialog = new MessageDialog("Файлы переименованы, кроме песен " +
                                 "приведенных ниже, так как у них нет тегов: " + temp);
                             await dialog.ShowAsync();
-                            Song_without_Tag.Clear();
+                            SongWithoutTag.Clear();
                         }
                         else
                         {
@@ -98,42 +98,40 @@ namespace Sync_and_Edit.EditPage
             }
         }
 
-        //Сама функция для переименования
+        // Метод для переименования
         private async Task Rename_function(SQLiteConnection db, List<Tag> Tags, int i)
         {
             var temp_tag = Tags[i];
             string temp_name = "";
             if (Rename.SelectedIndex == 0)
             {
-
-                temp_name = temp_tag.Artist + " - " + temp_tag.Name_song;
+                temp_name = temp_tag.Artist + " - " + temp_tag.NameSong;
             }
             if (Rename.SelectedIndex == 1)
             {
-                temp_name = temp_tag.Name_song;
+                temp_name = temp_tag.NameSong;
             }
-            var temp_song = db.Find<Song>(c => c.TagId == temp_tag.Id && c.Name_song != temp_name);
+            var temp_song = db.Find<Song>(c => c.TagId == temp_tag.Id && c.NameSong != temp_name);
             if (temp_song != null)
             {
-                if (temp_tag.Artist == "" || temp_tag.Name_song == "")
+                if (temp_tag.Artist == "" || temp_tag.NameSong == "")
                 {
-                    temp_name = temp_song.Name_song;
-                    Song_without_Tag.Add(temp_name);
+                    temp_name = temp_song.NameSong;
+                    SongWithoutTag.Add(temp_name);
                 }
-                var temp_format = db.Find<Music_format>(c => c.Id == temp_song.Format_Id);
-                var old_name = audioteca + "\\" + temp_song.Path + temp_song.Name_song + "." + temp_format.Name_format;  //норм пути до файлов
+                var temp_format = db.Find<MusicFormat>(c => c.Id == temp_song.FormatId);
+                var old_name = audioteca + "\\" + temp_song.Path + temp_song.NameSong + "." + temp_format.NameFormat;
 
                 //*сделать регулярное выражение
                 temp_name = temp_name.Replace(@"\", "").Replace(@"/", "").Replace(":", "").Replace("*", "").
                     Replace("?", "").Replace("<", "").Replace(">", "");
-                var new_name = audioteca + "\\" + temp_song.Path + temp_name + "." + temp_format.Name_format;
-
+                var new_name = audioteca + "\\" + temp_song.Path + temp_name + "." + temp_format.NameFormat;
 
                 await Task.Run(() =>
                 {
                     //*убрать запрещенные знаки при переименовании
-                    File.Move(old_name, new_name); //переименование
-                    temp_song.Name_song = temp_name;
+                    File.Move(old_name, new_name);
+                    temp_song.NameSong = temp_name;
                     Db_Helper.Update_Song(temp_song);
                 });
             }
@@ -147,24 +145,26 @@ namespace Sync_and_Edit.EditPage
                 Main_folder = await Windows.Storage.AccessCache.StorageApplicationPermissions
                 .FutureAccessList.GetFolderAsync("Audio");
                 var temp_tag = db.Find<Tag>(c => c.Id == temp_song.TagId);
+
                 try
                 {
                     StorageFolder y = await Main_folder.CreateFolderAsync(temp_tag.Artist);
                 }
                 catch { }
-                var temp_format = db.Find<Music_format>(c => c.Id == temp_song.Format_Id);
-                var old_name = audioteca + "\\" + temp_song.Path + temp_song.Name_song + "." + temp_format.Name_format;
-                var new_name = audioteca + "\\" + temp_tag.Artist + "\\" + temp_song.Name_song + "." + temp_format.Name_format;
+
+                var temp_format = db.Find<MusicFormat>(c => c.Id == temp_song.FormatId);
+                var old_name = audioteca + "\\" + temp_song.Path + temp_song.NameSong + "." + temp_format.NameFormat;
+                var new_name = audioteca + "\\" + temp_tag.Artist + "\\" + temp_song.NameSong + "." + temp_format.NameFormat;
 
                 if (temp_song.Path != "") //если изначальная папка была не аудиотека
                 {
                     var folder = audioteca + "\\" + temp_song.Path.Replace("\\", "");
-                    delete_folder.Add(folder);
+                    DeleteFolder.Add(folder);
                 }
 
                 await Task.Run(() =>
                 {
-                    File.Move(old_name, new_name); //перемещение
+                    File.Move(old_name, new_name);
                     if (temp_tag.Artist != "")
                     {
                         temp_song.Path = temp_tag.Artist + "\\";
@@ -176,16 +176,16 @@ namespace Sync_and_Edit.EditPage
             {
                 if (temp_song.Path != "")
                 {
-                    var temp_format = db.Find<Music_format>(c => c.Id == temp_song.Format_Id);
-                    var old_name = audioteca + "\\" + temp_song.Path + temp_song.Name_song + "." + temp_format.Name_format;
-                    var new_name = audioteca + "" + "\\" + temp_song.Name_song + "." + temp_format.Name_format;
+                    var temp_format = db.Find<MusicFormat>(c => c.Id == temp_song.FormatId);
+                    var old_name = audioteca + "\\" + temp_song.Path + temp_song.NameSong + "." + temp_format.NameFormat;
+                    var new_name = audioteca + "" + "\\" + temp_song.NameSong + "." + temp_format.NameFormat;
 
                     var folder = audioteca + "\\" + temp_song.Path.Replace("\\", "");
-                    delete_folder.Add(folder);
+                    DeleteFolder.Add(folder);
 
                     await Task.Run(() =>
                     {
-                        File.Move(old_name, new_name); //перемещение
+                        File.Move(old_name, new_name);
                         temp_song.Path = "";
                         Db_Helper.Update_Song(temp_song);
                     });
@@ -193,7 +193,7 @@ namespace Sync_and_Edit.EditPage
             }
         }
 
-        private async void directory_Click(object sender, RoutedEventArgs e)
+        private async void DirectoryClick(object sender, RoutedEventArgs e)
         {
             using (SQLiteConnection db = new SQLiteConnection(App.DB_PATH))
             {
@@ -213,9 +213,9 @@ namespace Sync_and_Edit.EditPage
                             await Replace_function(db, Songs, i);
                         }
                         //Удаляем папки из списка полученных
-                        delete_folder = delete_folder.Distinct().ToList<string>();
+                        DeleteFolder = DeleteFolder.Distinct().ToList<string>();
                         bool exist = false;
-                        foreach (string folder in delete_folder)
+                        foreach (string folder in DeleteFolder)
                         {
                             await Task.Run(() =>
                             {
@@ -244,19 +244,19 @@ namespace Sync_and_Edit.EditPage
         {
             using (SQLiteConnection db = new SQLiteConnection(App.DB_PATH))
             {
-                foreach (var item in Song_list_convert)
+                foreach (var item in SongDeleteAfterConvert)
                 {
-                    var format = db.Find<Music_format>(c => c.Id == item.Format_Id);
-                    var old_file = audioteca + "\\" + item.Name_song + "." + format.Name_format;
+                    var format = db.Find<MusicFormat>(c => c.Id == item.FormatId);
+                    var old_file = audioteca + "\\" + item.NameSong + "." + format.NameFormat;
                     await Task.Run(() =>
                     {
                         File.Delete(old_file); //удаляем старый файл
                     });
 
-                    var new_format = db.Find<Music_format>(c => c.Name_format == convert_type);
-                    item.Format_Id = new_format.Id;
+                    var new_format = db.Find<MusicFormat>(c => c.NameFormat == convert_type);
+                    item.FormatId = new_format.Id;
 
-                    var import_name = item.Path + item.Name_song + "." + new_format.Name_format;
+                    var import_name = item.Path + item.NameSong + "." + new_format.NameFormat;
                     var folder = await Windows.Storage.AccessCache.StorageApplicationPermissions
                     .FutureAccessList.GetFolderAsync("Audio");
                     StorageFile music_files = await folder.GetFileAsync(import_name);
@@ -287,7 +287,6 @@ namespace Sync_and_Edit.EditPage
                 case "High":
                     Quality = AudioEncodingQuality.High;
                     break;
-
                 case "Low":
                     Quality = AudioEncodingQuality.Low;
                     break;
@@ -332,9 +331,9 @@ namespace Sync_and_Edit.EditPage
                 var songs = db.Query<Song>("Select * from Song");
                 foreach (var song in songs)
                 {
-                    var format = db.Find<Music_format>(c => c.Id == song.Format_Id);
-                    var import_name = song.Path + song.Name_song + "." + format.Name_format;
-                    string new_name = song.Path + song.Name_song + type;
+                    var format = db.Find<MusicFormat>(c => c.Id == song.FormatId);
+                    var import_name = song.Path + song.NameSong + "." + format.NameFormat;
+                    string new_name = song.Path + song.NameSong + type;
 
                     Main_folder = await Windows.Storage.AccessCache.StorageApplicationPermissions
                     .FutureAccessList.GetFolderAsync("Audio");
@@ -350,7 +349,7 @@ namespace Sync_and_Edit.EditPage
                             {
                                 current_song = song;
                                 all_convert_song++;
-                                Song_list_convert.Add(current_song);
+                                SongDeleteAfterConvert.Add(current_song);
                                 MediaTranscoder transcoder = new MediaTranscoder();
                                 PrepareTranscodeResult prepareOp = await transcoder.PrepareFileTranscodeAsync(oldfile, newfile, profile);
                                 if (prepareOp.CanTranscode)
@@ -378,7 +377,8 @@ namespace Sync_and_Edit.EditPage
                 do
                 {
                     await Task.Delay(TimeSpan.FromSeconds(3));
-                } while (all_convert_song != current_convert_song);
+                } 
+                while (all_convert_song != current_convert_song);
                 Delete_oldfile();
             }
         }
@@ -401,7 +401,7 @@ namespace Sync_and_Edit.EditPage
             }
         }
 
-        private async void format_Click(object sender, RoutedEventArgs e)
+        private async void FormatClick(object sender, RoutedEventArgs e)
         {
             using (SQLiteConnection db = new SQLiteConnection(App.DB_PATH))
             {

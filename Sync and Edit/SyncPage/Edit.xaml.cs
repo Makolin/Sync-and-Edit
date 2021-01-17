@@ -166,7 +166,7 @@ namespace Sync_and_Edit.SyncPage
             {
                 foreach (var item in DB_SуnсList)
                 {
-                    var change = db.Find<Sync_Device>(c => c.SongID == item.SongID && c.DeviceID == item.DeviceID);
+                    var change = db.Find<SyncDevice>(c => c.SongID == item.SongID && c.DeviceID == item.DeviceID);
                     if (change.FormatToFormat != item.FormatToFormat || change.Synchronization != item.Synchronization)
                     {
                         change.FormatToFormat = item.FormatToFormat;
@@ -188,8 +188,8 @@ namespace Sync_and_Edit.SyncPage
                 foreach (var item in DB_SуnсList)
                 {
                     var song_format = db.Find<Song>(c => c.SongID == item.SongID);
-                    var exist_format = db.Find<Device_format>(c => c.DeviceID == item.DeviceID &&
-                        c.Music_formatID == song_format.Format_Id);
+                    var exist_format = db.Find<DeviceFormat>(c => c.DeviceID == item.DeviceID &&
+                        c.MusicFormatID == song_format.FormatId);
                     if (exist_format == null && item.FormatToFormat == false)
                     {
                         return false;
@@ -216,8 +216,8 @@ namespace Sync_and_Edit.SyncPage
                     using (SQLiteConnection db = new SQLiteConnection(App.DB_PATH))
                     {
                         var song_format = db.Find<Song>(c => c.SongID == item.SongID);
-                        var exist_format = db.Find<Device_format>(c => c.DeviceID == item.DeviceID &&
-                            c.Music_formatID == song_format.Format_Id);
+                        var exist_format = db.Find<DeviceFormat>(c => c.DeviceID == item.DeviceID &&
+                            c.MusicFormatID == song_format.FormatId);
                         if (exist_format == null)
                         {
                             item.FormatToFormat = true;

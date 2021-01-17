@@ -1,6 +1,8 @@
 ﻿using SQLite;
 using Sync_and_Edit.DataBase;
+using System;
 using System.Linq;
+using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 
 namespace Sync_and_Edit.Menu
@@ -14,7 +16,7 @@ namespace Sync_and_Edit.Menu
             my_list_box = myListBox;
             myFrame.Navigate(typeof(EditPage.Source));
         }
-        public void MyListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        public async void MyListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (source.IsSelected)
             {
@@ -28,6 +30,8 @@ namespace Sync_and_Edit.Menu
                     if (exist.Count() == 0)
                     {
                         source.IsSelected = true;
+                        var dialog = new MessageDialog("Аудиотека пуста!");
+                        await dialog.ShowAsync();
                     }
                     else
                     {
@@ -44,6 +48,8 @@ namespace Sync_and_Edit.Menu
                     if (exist.Count() == 0)
                     {
                         source.IsSelected = true;
+                        var dialog = new MessageDialog("Аудиотека пуста!");
+                        await dialog.ShowAsync();
                     }
                     else
                     {

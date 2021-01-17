@@ -8,10 +8,10 @@ namespace Sync_and_Edit.Menu
         public Info_Page()
         {
             this.InitializeComponent();
-            my_list_box = myListBox;
+            my_list_box = MenuInfo;
             myFrame.Navigate(typeof(InfoPage.Options));
         }
-        private void myListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void MenuInfoSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (oneStep.IsSelected)
             {

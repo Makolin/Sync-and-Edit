@@ -30,9 +30,9 @@
         <ProgressRing Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" x:Name="progressRing_format" IsActive="False" Width="30" Height="30"/>
         <ProgressRing Grid.Row="3" Grid.Column="2" HorizontalAlignment="Left" x:Name="progressRing_directory" IsActive="False" Width="30" Height="30"/>
 
-        <Button HorizontalAlignment="Left" Grid.Row="2" Grid.Column="2" x:Name="format" Content="Применить" Style="{StaticResource buttonForm}" Margin="50 0 0 0" Click="format_Click" />
-        <Button HorizontalAlignment="Left" Grid.Row="1" Grid.Column="2" x:Name="name" Content="Применить" Style="{StaticResource buttonForm}" Margin="50 0 0 0" Click="name_Click" />
-        <Button HorizontalAlignment="Left" Grid.Row="3" Grid.Column="2" x:Name="directory" Content="Применить" Style="{StaticResource buttonForm}" Margin="50 0 0 0" Click="directory_Click"/>
+        <Button HorizontalAlignment="Left" Grid.Row="2" Grid.Column="2" x:Name="format" Content="Применить" Style="{StaticResource buttonForm}" Margin="50 0 0 0" Click="FormatClick" />
+        <Button HorizontalAlignment="Left" Grid.Row="1" Grid.Column="2" x:Name="name" Content="Применить" Style="{StaticResource buttonForm}" Margin="50 0 0 0" Click="Name_Click" />
+        <Button HorizontalAlignment="Left" Grid.Row="3" Grid.Column="2" x:Name="directory" Content="Применить" Style="{StaticResource buttonForm}" Margin="50 0 0 0" Click="DirectoryClick"/>
         <ComboBox x:Name="Convert_combo" Width="300" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBlock>flac</TextBlock>
             <TextBlock>mp3</TextBlock>

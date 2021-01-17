@@ -35,21 +35,20 @@ namespace Sync_and_Edit.EditPage
 
         private async void Read_Json()
         {
-            Json = await Json.Read_Json();
+            Json = await Json.ReadJson();
             audioteca = Json.Json_audioteca;
             text_audioteca = Json.Json_audioteca.Split('\\').Last();
         }
 
         private void ReadSongList_Loaded(object sender, RoutedEventArgs e)
         {
-
-            ObservableCollection<Song> DB_SongList = new ObservableCollection<Song>(); //его обновлять
+            ObservableCollection<Song> DB_SongList = new ObservableCollection<Song>();
             ReadAllSongList dbsongs = new ReadAllSongList();
             DatabaseHelperClass Db_Helper = new DatabaseHelperClass();
             DB_SongList = dbsongs.GetAllSongs();
             try
             {
-                SongList.ItemsSource = DB_SongList.OrderBy(i => i.Name_song).ToList();
+                SongList.ItemsSource = DB_SongList.OrderBy(i => i.NameSong).ToList();
                 Statictik.Text = "Количество песен в базе: " + DB_SongList.Count.ToString();
             }
             catch { }
@@ -85,9 +84,9 @@ namespace Sync_and_Edit.EditPage
                 {
                     tb_Genge.Text = CurrentTag.Genge;
                 }*/
-                if (CurrentTag.Track_Number.ToString() != null)
+                if (CurrentTag.TrackNumber.ToString() != null)
                 {
-                    tb_Number.Text = CurrentTag.Track_Number.ToString();
+                    tb_Number.Text = CurrentTag.TrackNumber.ToString();
                 }
                 if (CurrentTag.Albom != null)
                 {
@@ -101,17 +100,17 @@ namespace Sync_and_Edit.EditPage
                 {
                     tb_Composer.Text = CurrentTag.Composer;
                 }*/
-                if (CurrentTag.Name_song != null)
+                if (CurrentTag.NameSong != null)
                 {
-                    tb_Name_song.Text = CurrentTag.Name_song;
+                    tb_Name_song.Text = CurrentTag.NameSong;
                 }
                 if (CurrentTag.Year.ToString() != null)
                 {
                     tb_Year.Text = CurrentTag.Year.ToString();
                 }
-                if (CurrentTag.Artist_Albom != null)
+                if (CurrentTag.ArtistAlbom != null)
                 {
-                    tb_Artist_Albom.Text = CurrentTag.Artist_Albom;
+                    tb_Artist_Albom.Text = CurrentTag.ArtistAlbom;
                 }
             }
         }
@@ -128,15 +127,15 @@ namespace Sync_and_Edit.EditPage
                 //    CurrentTag.Genge = tb_Genge.Text;
                 //    pometka = true;
                 //}
-                if (tb_Number.Text != CurrentTag.Track_Number.ToString())
+                if (tb_Number.Text != CurrentTag.TrackNumber.ToString())
                 {
                     if (tb_Number.Text != "")
                     {
-                        CurrentTag.Track_Number = Convert.ToInt32(tb_Number.Text);
+                        CurrentTag.TrackNumber = Convert.ToInt32(tb_Number.Text);
                     }
                     else
                     {
-                        CurrentTag.Track_Number = 0;
+                        CurrentTag.TrackNumber = 0;
                     }
                     pometka = true;
                 }
@@ -155,9 +154,9 @@ namespace Sync_and_Edit.EditPage
                 //    CurrentTag.Composer = tb_Composer.Text;
                 //    pometka = true;
                 //}
-                if (tb_Name_song.Text != CurrentTag.Name_song)
+                if (tb_Name_song.Text != CurrentTag.NameSong)
                 {
-                    CurrentTag.Name_song = tb_Name_song.Text;
+                    CurrentTag.NameSong = tb_Name_song.Text;
                     pometka_rename = true;
                 }
                 if (tb_Year.Text != CurrentTag.Year.ToString())
@@ -165,9 +164,9 @@ namespace Sync_and_Edit.EditPage
                     CurrentTag.Year = Convert.ToInt32(tb_Year.Text);
                     pometka = true;
                 }
-                if (tb_Artist_Albom.Text != CurrentTag.Artist_Albom)
+                if (tb_Artist_Albom.Text != CurrentTag.ArtistAlbom)
                 {
-                    CurrentTag.Artist_Albom = tb_Artist_Albom.Text;
+                    CurrentTag.ArtistAlbom = tb_Artist_Albom.Text;
                     pometka = true;
                 }
                 if (pometka_rename || pometka)
@@ -176,7 +175,7 @@ namespace Sync_and_Edit.EditPage
                     {
                         if (Check(CurrentTag))
                         {
-                            Db_Helper.Update_Tag(CurrentTag); //Сохраняем в базу
+                            Db_Helper.Update_Tag(CurrentTag);
                             Rename(CurrentTag);
                         }
                         else
@@ -187,7 +186,7 @@ namespace Sync_and_Edit.EditPage
                     }
                     if (pometka_rename == false && pometka)
                     {
-                        Db_Helper.Update_Tag(CurrentTag); //Сохраняем в базу
+                        Db_Helper.Update_Tag(CurrentTag);
                         Rename(CurrentTag);
                     }
                 }
@@ -211,29 +210,26 @@ namespace Sync_and_Edit.EditPage
                     var song = db.Find<Song>(c => c.TagId == currentTag.Id);
                     Db_Helper.DeleteSong(song.SongID);
                     Db_Helper.DeleteTag(song.TagId);
-                    Db_Helper.Delete_Song_in_Device_sync(song.SongID); //удаляем из таблицы синхронизации
+                    Db_Helper.Delete_Song_in_Device_sync(song.SongID);
 
-                    var temp_format = db.Find<Music_format>(c => c.Id == song.Format_Id);
-                    var file = audioteca + "\\" + song.Path + song.Name_song + "." + temp_format.Name_format;
+                    var temp_format = db.Find<MusicFormat>(c => c.Id == song.FormatId);
+                    var file = audioteca + "\\" + song.Path + song.NameSong + "." + temp_format.NameFormat;
 
                     await Task.Run(() =>
                     {
-                        File.Delete(file); //удаляем старый файл
-                        });
+                        File.Delete(file); 
+                    });
 
                 }
             }
-            if (result == ContentDialogResult.Secondary)
-            {
-
-            }
+            if (result == ContentDialogResult.Secondary) { }
         }
 
         private bool Check(Tag mytag)
         {
             using (SQLiteConnection db = new SQLiteConnection(App.DB_PATH))
             {
-                var exist_tag = db.Find<Tag>(c => c.Name_song == mytag.Name_song && c.Artist == mytag.Artist);
+                var exist_tag = db.Find<Tag>(c => c.NameSong == mytag.NameSong && c.Artist == mytag.Artist);
                 if (exist_tag != null)
                 {
                     return false;
@@ -242,18 +238,18 @@ namespace Sync_and_Edit.EditPage
                 {
                     return true;
                 }
-
             }
         }
 
         private async void Rename(Tag mytag)
         {
-            CurrentSong = SongList.SelectedItem as Song; //Текущая выбранная песня
+            CurrentSong = SongList.SelectedItem as Song; 
+
             using (SQLiteConnection db = new SQLiteConnection(App.DB_PATH))
             {
                 string import_name;
-                var temp_format_id = db.Find<Music_format>(c => c.Id == CurrentSong.Format_Id);
-                import_name = CurrentSong.Path + CurrentSong.Name_song + "." + temp_format_id.Name_format;
+                var temp_format_id = db.Find<MusicFormat>(c => c.Id == CurrentSong.FormatId);
+                import_name = CurrentSong.Path + CurrentSong.NameSong + "." + temp_format_id.NameFormat;
 
                 Main_folder = await Windows.Storage.AccessCache.StorageApplicationPermissions
                 .FutureAccessList.GetFolderAsync("Audio");
@@ -270,21 +266,20 @@ namespace Sync_and_Edit.EditPage
                 string[] contributingArtists = contributingArtistsProperty["System.Music.Artist"] as string[];
 
                 //fileProperties.Genre = mytag.Genge; \\только для чтения
-                fileProperties.TrackNumber = Convert.ToUInt32(mytag.Track_Number);
+                fileProperties.TrackNumber = Convert.ToUInt32(mytag.TrackNumber);
                 fileProperties.Album = mytag.Albom;
                 fileProperties.Artist = mytag.Artist;
                 //fileProperties.Composers = mytag.Composer; \\только для чтения
-                fileProperties.Title = mytag.Name_song;
+                fileProperties.Title = mytag.NameSong;
                 fileProperties.Year = Convert.ToUInt32(mytag.Year);
-                fileProperties.AlbumArtist = mytag.Artist_Albom;
+                fileProperties.AlbumArtist = mytag.ArtistAlbom;
                 //*Ошибка доступа для Флер
                 await fileProperties.SavePropertiesAsync();
 
-                //Обновление даты изменения файла
                 var temp_song = db.Find<Song>(c => c.TagId == mytag.Id);
                 await Task.Run(() =>
                 {
-                    temp_song.Date_change = DateTime.Now.AddHours(5);
+                    temp_song.DateChange = DateTime.Now.AddHours(5);
                     Db_Helper.Update_Song(temp_song);
                 });
             }

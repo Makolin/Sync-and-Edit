@@ -19,7 +19,7 @@ namespace Sync_and_Edit.SyncPage
         Device Current_device;
         private static int delete_comp = 0, delete_device = 0, copy_device = 0, step = 0,
             count_sync_song = 0;
-        static List<Sync_Device> first; //для проверки о первом запуске синхронизации для данного устройства
+        static List<SyncDevice> first; //для проверки о первом запуске синхронизации для данного устройства
         public Sync()
         {
             this.InitializeComponent();
@@ -79,7 +79,7 @@ namespace Sync_and_Edit.SyncPage
                 {
                     var temp = await Find_device(Current_device);
                     var count_on_device = Find_Song(temp.Path);
-                    var count_on_copm = db.Query<Sync_Device>("Select * from Sync_Device where Date_sync != 0 and DeviceID = " + Current_device.Id).ToList();
+                    var count_on_copm = db.Query<SyncDevice>("Select * from Sync_Device where Date_sync != 0 and DeviceID = " + Current_device.Id).ToList();
                     if (count_on_device.Count() != count_on_copm.Count())
                     {
                         delete_comp = count_on_copm.Count() - count_on_device.Count();
@@ -131,12 +131,12 @@ namespace Sync_and_Edit.SyncPage
                     if (temp != null)
                     {
                         Current_device = item;
-                        var song = db.Query<Sync_Device>("Select * from Sync_Device where Date_sync = 0 and " +
+                        var song = db.Query<SyncDevice>("Select * from Sync_Device where Date_sync = 0 and " +
                             "Synchronization = true and DeviceID = " + Current_device.Id).ToList();
                         copy_device = song.Count();
 
                         var count_on_device = Find_Song(temp.Path);
-                        var count_on_copm = db.Query<Sync_Device>("Select * from Sync_Device where Date_sync != 0 and " +
+                        var count_on_copm = db.Query<SyncDevice>("Select * from Sync_Device where Date_sync != 0 and " +
                             " DeviceID = " + Current_device.Id).ToList();
 
                         var temp_song = db.Query<Song>("Select * from Song where Deleted = true");
@@ -144,8 +144,8 @@ namespace Sync_and_Edit.SyncPage
                         {
                             foreach (var item_song in temp_song)
                             {
-                                var format = db.Find<Music_format>(c => c.Id == item_song.Format_Id);
-                                var text_song = temp.Path + "\\" + item_song.Name_song + "." + format.Name_format;
+                                var format = db.Find<MusicFormat>(c => c.Id == item_song.FormatId);
+                                var text_song = temp.Path + "\\" + item_song.NameSong + "." + format.NameFormat;
                                 if (!count_on_device.Contains(text_song))
                                 {
                                     Db_Helper.DeleteSong(item_song.SongID);
@@ -180,7 +180,7 @@ namespace Sync_and_Edit.SyncPage
                 Step_plus();
                 using (SQLiteConnection db = new SQLiteConnection(App.DB_PATH))
                 {
-                    first = db.Query<Sync_Device>("select * from Sync_Device where Date_sync != 0 and " +
+                    first = db.Query<SyncDevice>("select * from Sync_Device where Date_sync != 0 and " +
                         "Synchronization = true and DeviceID = " + current_device.Id);
                     //если это первая синхронизация для данного устройства
 
@@ -222,22 +222,22 @@ namespace Sync_and_Edit.SyncPage
             {
                 if (copy_device != 0)
                 {
-                    var songs = db.Query<Sync_Device>("Select * from Sync_Device where Date_sync = 0 and " +
+                    var songs = db.Query<SyncDevice>("Select * from Sync_Device where Date_sync = 0 and " +
                         "Synchronization = true and DeviceID = " + Current_device.Id).ToList();
                     foreach (var song in songs)
                     {
                         //править проверку 
                         var temp_song = db.Find<Song>(c => c.SongID == song.SongID && c.Deleted == false);
-                        var format = db.Find<Music_format>(c => c.Id == temp_song.Format_Id);
-                        var old_file = Audio.Path + "\\" + temp_song.Path + temp_song.Name_song + "." + format.Name_format;
-                        string fileName = temp_song.Name_song + "." + format.Name_format;
+                        var format = db.Find<MusicFormat>(c => c.Id == temp_song.FormatId);
+                        var old_file = Audio.Path + "\\" + temp_song.Path + temp_song.NameSong + "." + format.NameFormat;
+                        string fileName = temp_song.NameSong + "." + format.NameFormat;
                         string destFile = Path.Combine(Device_folder.Path, fileName);
                         await Task.Run(() =>
                         {
                             File.Copy(old_file, destFile, false); //Перемещаем новый файл
                         });
 
-                        song.Date_sync = DateTime.Now.AddHours(5);
+                        song.DateSync = DateTime.Now.AddHours(5);
                         Db_Helper.Update_Sync_Device(song);
                         status.Value += step;
                         count_sync_song++;
@@ -250,16 +250,16 @@ namespace Sync_and_Edit.SyncPage
                 {
                     var temp = await Find_device(Current_device);
                     var files = Find_Song(temp.Path);
-                    var song_comp = db.Query<Sync_Device>("Select * from Sync_Device where " +
+                    var song_comp = db.Query<SyncDevice>("Select * from Sync_Device where " +
                         " Date_sync = 0 and DeviceID = " + Current_device.Id);
                     foreach (var item in song_comp)
                     {
                         var song = db.Find<Song>(c => c.SongID == item.SongID);
-                        var format = db.Find<Music_format>(c => c.Id == song.Format_Id);
-                        var text_song = temp.Path + "\\" + song.Name_song + "." + format.Name_format;
+                        var format = db.Find<MusicFormat>(c => c.Id == song.FormatId);
+                        var text_song = temp.Path + "\\" + song.NameSong + "." + format.NameFormat;
                         if (!files.Contains(text_song))
                         {
-                            var temp_path = Audio.Path + "\\" + song.Path + song.Name_song + "." + format.Name_format;
+                            var temp_path = Audio.Path + "\\" + song.Path + song.NameSong + "." + format.NameFormat;
                             await Task.Run(() =>
                             {
                                 File.Delete(temp_path);
@@ -269,7 +269,7 @@ namespace Sync_and_Edit.SyncPage
                             count_sync_song++;
                             Count_sync.Text = "Обработано " + count_sync_song + " из " + (delete_comp + delete_device + copy_device) + " песен";
 
-                            var exist = db.Query<Sync_Device>("Select * from Sync_Device where SongID = " + item.SongID +
+                            var exist = db.Query<SyncDevice>("Select * from Sync_Device where SongID = " + item.SongID +
                                 " and Date_sync = 0");
                             if (exist.Count() == 0)
                             {
@@ -289,8 +289,8 @@ namespace Sync_and_Edit.SyncPage
                     {
                         foreach (string file in files)
                         {
-                            var format = db.Find<Music_format>(c => c.Id == item.Format_Id);
-                            var text_song = temp.Path + "\\" + item.Name_song + "." + format.Name_format;
+                            var format = db.Find<MusicFormat>(c => c.Id == item.FormatId);
+                            var text_song = temp.Path + "\\" + item.NameSong + "." + format.NameFormat;
                             if (file == text_song)
                             {
                                 await Task.Run(() =>
@@ -304,7 +304,7 @@ namespace Sync_and_Edit.SyncPage
                             }
 
                         }
-                        var exist = db.Query<Sync_Device>("Select * from Sync_Device where SongID = " + item.SongID +
+                        var exist = db.Query<SyncDevice>("Select * from Sync_Device where SongID = " + item.SongID +
                             " and Date_sync = 0 and Synchronization = true");
                         if (exist.Count() == 0)
                         {

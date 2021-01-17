@@ -14,9 +14,9 @@ namespace Sync_and_Edit.DataBase
                 db.CreateTable<Device>();
                 db.CreateTable<Song>();
                 db.CreateTable<Tag>();
-                db.CreateTable<Sync_Device>();
-                db.CreateTable<Music_format>();
-                db.CreateTable<Device_format>();
+                db.CreateTable<SyncDevice>();
+                db.CreateTable<MusicFormat>();
+                db.CreateTable<DeviceFormat>();
             }
         }
 
@@ -27,17 +27,17 @@ namespace Sync_and_Edit.DataBase
                 db.DeleteAll<Device>();
                 db.DeleteAll<Song>();
                 db.DeleteAll<Tag>();
-                db.DeleteAll<Sync_Device>();
-                db.DeleteAll<Device_format>();
+                db.DeleteAll<SyncDevice>();
+                db.DeleteAll<DeviceFormat>();
             }
         }
 
-
-        public void Insert(Music_format objFormat) //Заполнение таблицы форматов
+        // Заполнение таблицы форматов
+        public void Insert(MusicFormat objFormat) 
         {
             using (SQLiteConnection db = new SQLiteConnection(App.DB_PATH))
             {
-                var existingformat = db.Find<Music_format>(c => c.Name_format == objFormat.Name_format);
+                var existingformat = db.Find<MusicFormat>(c => c.NameFormat == objFormat.NameFormat);
                 if (existingformat == null)
                 {
                     db.RunInTransaction(() =>
@@ -75,6 +75,7 @@ namespace Sync_and_Edit.DataBase
                 }
             }
         }
+
         // Добавление тегов устройства
         public void Insert_Tag(Tag objTag)
         {
@@ -87,8 +88,9 @@ namespace Sync_and_Edit.DataBase
             }
 
         }
+
         // Добавление типов форматов
-        public void Insert_Device_Format(Device_format objDeviceFormat)
+        public void Insert_Device_Format(DeviceFormat objDeviceFormat)
         {
             using (SQLiteConnection db = new SQLiteConnection(App.DB_PATH))
             {
@@ -98,12 +100,13 @@ namespace Sync_and_Edit.DataBase
                 });
             }
         }
-        //Добавление песен
+
+        // Добавление треков
         public void Insert_Song(Song objSong)
         {
             using (SQLiteConnection db = new SQLiteConnection(App.DB_PATH))
             {
-                objSong.Date_change = objSong.Date_change.AddHours(5);
+                objSong.DateChange = objSong.DateChange.AddHours(5);
                 db.RunInTransaction(() =>
                 {
                     db.Insert(objSong);
@@ -111,18 +114,19 @@ namespace Sync_and_Edit.DataBase
             }
         }
 
-
-        public void Insert_Sync_Device(Sync_Device objSync)
+        public void Insert_Sync_Device(SyncDevice objSync)
         {
             using (SQLiteConnection db = new SQLiteConnection(App.DB_PATH))
             {
                 var song_format = db.Find<Song>(c => c.SongID == objSync.SongID);
-                var exist_format = db.Find<Device_format>(c => c.DeviceID == objSync.DeviceID && c.Music_formatID == song_format.Format_Id);
+                var exist_format = db.Find<DeviceFormat>(c => c.DeviceID == objSync.DeviceID && c.MusicFormatID == song_format.FormatId);
                 if (exist_format == null)
                 {
                     objSync.FormatToFormat = true;
                 }
-                objSync.Synchronization = true; //Изначально всегда синхронизировать
+
+                // Изначально всегда синхронизировать
+                objSync.Synchronization = true; 
 
                 db.RunInTransaction(() =>
                 {
@@ -131,15 +135,14 @@ namespace Sync_and_Edit.DataBase
             }
         }
 
-        public void Update_Sync_Device(Sync_Device objSync)
+        public void Update_Sync_Device(SyncDevice objSync)
         {
             using (SQLiteConnection db = new SQLiteConnection(App.DB_PATH))
             {
-                var exist = db.Query<Sync_Device>("select * from Sync_Device where SongID =" + objSync.SongID +
+                var exist = db.Query<SyncDevice>("select * from Sync_Device where SongID =" + objSync.SongID +
                     " and DeviceId = " + objSync.DeviceID).FirstOrDefault();
                 if (exist != null)
                 {
-
                     db.RunInTransaction(() =>
                     {
                         db.Update(objSync);
@@ -155,7 +158,6 @@ namespace Sync_and_Edit.DataBase
                 var exist = db.Query<Song>("select * from Song where SongID =" + objSong.SongID).FirstOrDefault();
                 if (exist != null)
                 {
-
                     db.RunInTransaction(() =>
                     {
                         db.Update(objSong);
@@ -171,7 +173,6 @@ namespace Sync_and_Edit.DataBase
                 var existingconact = db.Query<Tag>("select * from Tag where Id =" + objTag.Id).FirstOrDefault();
                 if (existingconact != null)
                 {
-
                     db.RunInTransaction(() =>
                     {
                         db.Update(objTag);
@@ -197,14 +198,15 @@ namespace Sync_and_Edit.DataBase
             }
         }
 
-        public ObservableCollection<Sync_Device> ReadAllSync() //Используется для вывода всего списка
+        // Используется для вывода всего списка устройств
+        public ObservableCollection<SyncDevice> ReadAllSync() 
         {
             try
             {
                 using (SQLiteConnection db = new SQLiteConnection(App.DB_PATH))
                 {
-                    List<Sync_Device> myCollection = db.Table<Sync_Device>().ToList<Sync_Device>();
-                    ObservableCollection<Sync_Device> DeviceList = new ObservableCollection<Sync_Device>(myCollection);
+                    List<SyncDevice> myCollection = db.Table<SyncDevice>().ToList<SyncDevice>();
+                    ObservableCollection<SyncDevice> DeviceList = new ObservableCollection<SyncDevice>(myCollection);
                     return DeviceList;
                 }
             }
@@ -214,26 +216,27 @@ namespace Sync_and_Edit.DataBase
             }
         }
 
-        public ObservableCollection<Combinated_Sync> ReadAllCombinated(Device CurrentDevice) //Используется для вывода всего списка
+        // Используется для вывода всего списка объектов для синхронизации
+        public ObservableCollection<Combinated_Sync> ReadAllCombinated(Device CurrentDevice) 
         {
             try
             {
                 using (SQLiteConnection db = new SQLiteConnection(App.DB_PATH))
                 {
                     List<Combinated_Sync> myCollection = new List<Combinated_Sync>();
-                    var sync = db.Table<Sync_Device>().ToList();
+                    var sync = db.Table<SyncDevice>().ToList();
                     foreach (var temp in sync)
                     {
                         var test = db.Find<Song>(c => c.SongID == temp.SongID);
                         bool visible = false;
-                        if (temp.Date_sync.ToString() != "01.01.0001 0:00:00")
+                        if (temp.DateSync.ToString() != "01.01.0001 0:00:00")
                         {
                             visible = true;
                         }
                         if (test.Deleted != true)
                         {
-                            myCollection.Add(new Combinated_Sync(temp.DeviceID, temp.SongID, test.Name_song, temp.Synchronization,
-                                temp.FormatToFormat, temp.Date_sync, visible));
+                            myCollection.Add(new Combinated_Sync(temp.DeviceID, temp.SongID, test.NameSong, temp.Synchronization,
+                                temp.FormatToFormat, temp.DateSync, visible));
                         }
                     }
                     ObservableCollection<Combinated_Sync> CombinatedList = new ObservableCollection<Combinated_Sync>(myCollection);
@@ -247,7 +250,8 @@ namespace Sync_and_Edit.DataBase
             }
         }
 
-        public ObservableCollection<Song> ReadAllSongs() //Используется для вывода всего списка
+        //Используется для вывода всего списка треков
+        public ObservableCollection<Song> ReadAllSongs() 
         {
             try
             {
@@ -312,7 +316,7 @@ namespace Sync_and_Edit.DataBase
         {
             using (SQLiteConnection db = new SQLiteConnection(App.DB_PATH))
             {
-                var existingdevice = db.Find<Device_format>(c => c.DeviceID == deviceId && c.Music_formatID == formatId);
+                var existingdevice = db.Find<DeviceFormat>(c => c.DeviceID == deviceId && c.MusicFormatID == formatId);
                 if (existingdevice != null)
                 {
                     db.RunInTransaction(() =>
@@ -327,18 +331,17 @@ namespace Sync_and_Edit.DataBase
         {
             using (SQLiteConnection db = new SQLiteConnection(App.DB_PATH))
             {
-                Device_format existingdevice;
-                existingdevice = db.Query<Device_format>("select * from Device_format where DeviceID =" + Id).FirstOrDefault();
+                DeviceFormat existingdevice;
+                existingdevice = db.Query<DeviceFormat>("select * from Device_format where DeviceID =" + Id).FirstOrDefault();
                 do
                 {
                     db.RunInTransaction(() =>
                     {
                         db.Delete(existingdevice);
                     });
-                    existingdevice = db.Query<Device_format>("select * from Device_format where DeviceID =" + Id).FirstOrDefault();
+                    existingdevice = db.Query<DeviceFormat>("select * from Device_format where DeviceID =" + Id).FirstOrDefault();
                 }
                 while (existingdevice != null);
-
             }
         }
 
@@ -346,33 +349,32 @@ namespace Sync_and_Edit.DataBase
         {
             using (SQLiteConnection db = new SQLiteConnection(App.DB_PATH))
             {
-                Sync_Device existingdevice;
-                existingdevice = db.Query<Sync_Device>("select * from Sync_Device where DeviceID =" + Id).FirstOrDefault();
+                SyncDevice existingdevice;
+                existingdevice = db.Query<SyncDevice>("select * from Sync_Device where DeviceID =" + Id).FirstOrDefault();
                 do
                 {
                     db.RunInTransaction(() =>
                     {
                         db.Delete(existingdevice);
                     });
-                    existingdevice = db.Query<Sync_Device>("select * from Sync_Device where DeviceID =" + Id).FirstOrDefault();
+                    existingdevice = db.Query<SyncDevice>("select * from Sync_Device where DeviceID =" + Id).FirstOrDefault();
                 }
                 while (existingdevice != null);
-
             }
         }
         public void Delete_Song_in_Device_sync(int Id)
         {
             using (SQLiteConnection db = new SQLiteConnection(App.DB_PATH))
             {
-                Sync_Device existingsong;
-                existingsong = db.Query<Sync_Device>("select * from Sync_Device where SongID =" + Id).FirstOrDefault();
+                SyncDevice existingsong;
+                existingsong = db.Query<SyncDevice>("select * from Sync_Device where SongID =" + Id).FirstOrDefault();
                 do
                 {
                     db.RunInTransaction(() =>
                     {
                         db.Delete(existingsong);
                     });
-                    existingsong = db.Query<Sync_Device>("select * from Sync_Device where SongID =" + Id).FirstOrDefault();
+                    existingsong = db.Query<SyncDevice>("select * from Sync_Device where SongID =" + Id).FirstOrDefault();
                 }
                 while (existingsong != null);
             }

@@ -13,7 +13,7 @@
             <ColumnDefinition Width="250"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <ListBox Name="myListBox" SelectionMode="Single" Grid.Column="0" SelectionChanged="myListBox_SelectionChanged">
+        <ListBox Name="MenuInfo" SelectionMode="Single" Grid.Column="0" SelectionChanged="MenuInfoSelectionChanged">
             <ListBoxItem Name="oneStep">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Style="{StaticResource itemIcon}"/>

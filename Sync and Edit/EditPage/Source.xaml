@@ -29,7 +29,7 @@
         <!--Первый видимый источник-->
         <TextBox IsHitTestVisible="False" Grid.Row="1" Grid.Column="1" x:Name="Source_1" VerticalAlignment="Center" HorizontalAlignment="Center" Width="500"/>
         <Button x:Name="Source_1_btn" Grid.Row="1" Grid.Column="2" Content="Обзор" Style="{StaticResource buttonForm}" Click="Source_1_Click"/>
-        <!--Добополнительные источники -->
+        <!--Дополнительные источники -->
         <TextBox IsHitTestVisible="False" Grid.Row="2" Grid.Column="1" x:Name="Source_2" VerticalAlignment="Center" HorizontalAlignment="Center" Width="500" Visibility="Collapsed" />
         <Button x:Name="Source_2_btn" Grid.Row="2" Grid.Column="2" Content="Обзор" Style="{StaticResource buttonForm}" Click="Source_2_Click" Visibility="Collapsed"/>
 

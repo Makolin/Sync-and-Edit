@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 
 namespace Sync_and_Edit.DataBase
 {
@@ -26,7 +21,7 @@ namespace Sync_and_Edit.DataBase
     class ReadAllSyncList
     {
         DatabaseHelperClass Db_Helper = new DatabaseHelperClass();
-        public ObservableCollection<Sync_Device> GetAllSync()
+        public ObservableCollection<SyncDevice> GetAllSync()
         {
             return Db_Helper.ReadAllSync();
         }

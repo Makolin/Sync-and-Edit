@@ -18,14 +18,18 @@ namespace Sync_and_Edit.Json
         public string Json_aac { get; set; }
         private static string json_path = ApplicationData.Current.LocalFolder.Path;
 
-        public async Task<Json_options> Read_Json()
+        public async Task<Json_options> ReadJson()
         {
             var path_source = new Json_options()
             {
-                Json_audioteca = @"C:\Users\Admin\Music\Audioteca",
+                Json_audioteca = string.Empty,
+                Json_source_1 = string.Empty,
+                Json_source_2 = string.Empty,
+                Json_source_3 = string.Empty,
+                /*Json_audioteca = @"C:\Users\Admin\Music\Audioteca",
                 Json_source_1 = @"C:\Users\Admin\Music\Source_1",
                 Json_source_2 = @"C:\Users\Admin\Music\Source_2",
-                Json_source_3 = @"C:\Users\Admin\Music\Source_3",
+                Json_source_3 = @"C:\Users\Admin\Music\Source_3",*/
                 Json_mp3 = "High",
                 Json_alac = "Medium",
                 Json_flac = "Medium",
@@ -36,6 +40,7 @@ namespace Sync_and_Edit.Json
             {
                 exist = File.Exists(json_path + "\\options.json");
             });
+
             if (exist != false)
             {
                 await Task.Run(() =>

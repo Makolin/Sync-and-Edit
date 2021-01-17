@@ -140,9 +140,6 @@
     <Compile Include="InfoPage\Statistics.xaml.cs">
       <DependentUpon>Statistics.xaml</DependentUpon>
     </Compile>
-    <Compile Include="InfoPage\User_Doc.xaml.cs">
-      <DependentUpon>User_Doc.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Json\Json_options.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -230,6 +227,9 @@
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="Properties\Default.rd.xml" />
+    <Content Include="Resources\add.png" />
+    <Content Include="Resources\Main_edit.png" />
+    <Content Include="Resources\Main_sync.png" />
     <Content Include="Resources\player.jpg" />
     <Content Include="Resources\smart.jpg" />
   </ItemGroup>
@@ -259,10 +259,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="InfoPage\Statistics.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="InfoPage\User_Doc.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

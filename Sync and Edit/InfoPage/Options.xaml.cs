@@ -55,7 +55,7 @@ namespace Sync_and_Edit.InfoPage
 
         private async void Read_Json()
         {
-            Json = await Json.Read_Json();
+            Json = await Json.ReadJson();
             mp3.SelectedIndex = Index_combobox(Json.Json_mp3);
             alac.SelectedIndex = Index_combobox(Json.Json_alac);
             flac.SelectedIndex = Index_combobox(Json.Json_flac);
