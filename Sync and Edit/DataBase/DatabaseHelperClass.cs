@@ -181,7 +181,8 @@ namespace Sync_and_Edit.DataBase
             }
         }
 
-        public ObservableCollection<Device> ReadAllDevices() //Используется для вывода всего списка
+        // Используется для вывода всего списка
+        public ObservableCollection<Device> ReadAllDevices() 
         {
             try
             {
@@ -250,7 +251,7 @@ namespace Sync_and_Edit.DataBase
             }
         }
 
-        //Используется для вывода всего списка треков
+        // Используется для вывода всего списка треков
         public ObservableCollection<Song> ReadAllSongs() 
         {
             try

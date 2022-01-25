@@ -50,7 +50,6 @@ namespace Sync_and_Edit.EditPage
             text_audioteca = Json.Json_audioteca.Split('\\').Last();
         }
 
-
         private async void Name_Click(object sender, RoutedEventArgs e)
         {
             using (SQLiteConnection db = new SQLiteConnection(App.DB_PATH))

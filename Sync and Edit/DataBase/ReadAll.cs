@@ -10,6 +10,7 @@ namespace Sync_and_Edit.DataBase
             return Db_Helper.ReadAllDevices();
         }
     }
+
     class ReadAllSongList
     {
         DatabaseHelperClass Db_Helper = new DatabaseHelperClass();
@@ -18,6 +19,7 @@ namespace Sync_and_Edit.DataBase
             return Db_Helper.ReadAllSongs();
         }
     }
+
     class ReadAllSyncList
     {
         DatabaseHelperClass Db_Helper = new DatabaseHelperClass();
@@ -26,6 +28,7 @@ namespace Sync_and_Edit.DataBase
             return Db_Helper.ReadAllSync();
         }
     }
+
     class ReadAllCombinatedList
     {
         DatabaseHelperClass Db_Helper = new DatabaseHelperClass();

@@ -3,10 +3,6 @@ using System;
 
 namespace Sync_and_Edit.DataBase
 {
-    /*interface ISong
-    {
-        int SongID { get; }
-    }*/
     public class Device
     {
         [PrimaryKey, AutoIncrement, NotNull]
@@ -120,7 +116,6 @@ namespace Sync_and_Edit.DataBase
         {
             DeviceID = deviceId;
             MusicFormatID = musicFormatId;
-
         }
     }
 
@@ -159,7 +154,7 @@ namespace Sync_and_Edit.DataBase
         public bool Synchronization { get; set; }
         public bool FormatToFormat { get; set; }
         public DateTime DateChange { get; set; }
-        bool Visible { get; set; }
+        public bool Visible { get; set; }
 
         public Combinated_Sync(int deviceId, int songId, string nameSong, bool synchronization, bool formatToFormat,
             DateTime dateChange, bool visible)
